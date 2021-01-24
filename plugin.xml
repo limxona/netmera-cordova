@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-netmera" version="1.0.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>NetmeraPlugin</name>
+
+    <js-module name="NetmeraPlugin" src="NetmeraPlugin.js">
+        <clobbers target="NetmeraPlugin" />
+    </js-module>
+
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="NetmeraPlugin">
+                <param name="android-package" value="com.netmera.cordova.plugin.NetmeraPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest" mode="merge">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*/application">
+            <receiver android:name="com.netmera.cordova.plugin.PushReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.netmera.web.content.SHOW"/>
+                <action android:name="com.netmera.web.content.CLOSE"/>
+                <action android:name="com.netmera.push.intent.REGISTER"/>
+                <action android:name="com.netmera.push.intent.RECEIVE"/>
+                <action android:name="com.netmera.push.intent.OPEN"/>
+                <action android:name="com.netmera.push.intent.DISMISS"/>
+                <action android:name="com.netmera.push.intent.BUTTON"/>
+                <action android:name="com.netmera.push.intent.carousel.OPEN"/>
+                <action android:name="com.netmera.push.intent.carousel.PREV"/>
+                <action android:name="com.netmera.push.intent.carousel.NEXT"/>
+                <action android:name="com.netmera.push.intent.carousel.ITEM"/>
+            </intent-filter>
+        </receiver>
+        </config-file>
+        
+        <config-file parent="/*" target="AndroidManifest.xml" />
+        <source-file src="src/android/NetmeraPlugin.java" target-dir="src/com/netmera/cordova/plugin" />
+        <source-file src="src/android/PushReceiver.java" target-dir="src/com/netmera/cordova/plugin" />
+        <framework src="netmera.gradle" custom="true" type="gradleReference" />
+        <framework src="com.netmera:netmera:3.8.3" />
+        <framework src="com.google.gms:google-services:4.3.4" />
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="NetmeraPlugin">
+                <param name="ios-package" value="NetmeraPlugin" />
+            </feature>
+        </config-file>
+
+        <framework src="Netmera" type="podspec" spec="3.9.2" />
+        <header-file src="src/ios/NetmeraPlugin.h" />
+        <source-file src="src/ios/NetmeraPlugin.m" />
+        <header-file src="src/ios/AppDelegate+NetmeraPlugin.h" />
+        <source-file src="src/ios/AppDelegate+NetmeraPlugin.m" />
+        <header-file src="src/ios/FNetmeraUser.h" />
+        <source-file src="src/ios/FNetmeraUser.m" />
+    </platform>
+</plugin>

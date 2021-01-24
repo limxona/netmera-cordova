@@ -1,0 +1,19 @@
+{
+  "name": "cordova-plugin-netmera",
+  "version": "1.0.0",
+  "description": "Netmera Cordova Plugin",
+  "cordova": {
+    "id": "cordova-plugin-netmera",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Netmera",
+  "license": "ISC"
+}
