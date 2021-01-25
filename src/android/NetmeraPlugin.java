@@ -2,7 +2,6 @@ package com.netmera.cordova.plugin;
 
 import android.util.Log;
 import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.annotations.SerializedName;
@@ -164,6 +163,10 @@ public class NetmeraPlugin extends CordovaPlugin {
             String message = args.getString(0);
 
             //this.coolMethod(message, callbackContext);
+
+            //Netmera.init(this, "339386690082", "QBT4dSEEyRKGPVLbZIazzSnz0D1KJZBQDk_SIUSBonc15Aa2t9HUNg");
+            //Netmera.logging(true);
+            //Netmera.enablePopupPresentation();
 
             return true;
         } else if (action.equals("registerPushNotification")) {
@@ -328,10 +331,10 @@ public class NetmeraPlugin extends CordovaPlugin {
         responsePush.put("body", push.getPushStyle().getContentText());
         responsePush.put("pushId", push.getPushId());
         responsePush.put("pushInstanceId", push.getPushInstanceId());
-        //responsePush.put("badge", 0); // TODO: Bu property'e bak yok mu?
         responsePush.put("pushType", push.getPushType());
         responsePush.put("inboxStatus", push.getInboxStatus());
         responsePush.put("sendDate", push.getSendDate());
+        responsePush.put("deeplinkUrl", push.getDeepLink().toString());
 
         return responsePush;
     }

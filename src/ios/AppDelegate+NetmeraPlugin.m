@@ -17,6 +17,8 @@
 
 
 static NSString *apnsToken;
+static NSData *initialPushPayload;
+static NSData *lastPush;
 
 //Method swizzling
 + (void)load {
@@ -50,30 +52,45 @@ static NSString *apnsToken;
 }
 
 // Delegation methods
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
+{
     const void *devTokenBytes = [devToken bytes];
     NSLog(@"Registration. Token: %@", devToken);
 }
 
-- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err
+{
     NSLog(@"Error in registration. Error: %@", err);
 }
 
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
-    NSDictionary *mutableUserInfo = [userInfo mutableCopy];
-        // Print full message.
-        NSLog(@"%@", mutableUserInfo);
-        completionHandler(UIBackgroundFetchResultNewData);
-        [NetmeraPlugin.netmeraPlugin sendNotification:mutableUserInfo];
-}
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+//{
+//    
+//    
+//    //NSDictionary *mutableUserInfo = [userInfo mutableCopy];
+//        // Print full message.
+//      //  NSLog(@"%@", mutableUserInfo);
+//        completionHandler(UIBackgroundFetchResultNewData);
+//        //[NetmeraPlugin.netmeraPlugin sendNotification:mutableUserInfo];
+//}
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {
+    NSDictionary *mutableUserInfo = notification.request.content.userInfo;
+    [NetmeraPlugin.netmeraPlugin sendNotification:mutableUserInfo];
     completionHandler(UNNotificationPresentationOptionAlert);
 }
 
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(nonnull UNNotificationResponse *)response withCompletionHandler:(nonnull void (^)(void))completionHandler
+{
+    NSDictionary *mutableUserInfo = response.notification.request.content.userInfo;
+    NSError *error;
+    lastPush = [NSJSONSerialization dataWithJSONObject:mutableUserInfo options:0 error:&error];
+    [AppDelegate setInitialPushPayload:lastPush];
+    [NetmeraPlugin.netmeraPlugin sendNotificationClick:mutableUserInfo];
+    completionHandler();
+}
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
@@ -102,6 +119,16 @@ continueUserActivity:(NSUserActivity *)userActivity
     [NetmeraPlugin.netmeraPlugin sendOpenUrl:url.absoluteString];
   }
   return YES;
+}
+
++ (void)setInitialPushPayload:(NSData*)payload {
+    if(initialPushPayload == nil) {
+        initialPushPayload = payload;
+    }
+}
+
++ (NSData*)getInitialPushPayload {
+    return initialPushPayload;
 }
 
 @end

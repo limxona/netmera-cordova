@@ -5,6 +5,12 @@
 #import <Netmera/Netmera.h>
 #import <objc/runtime.h>
 #import "FNetmeraUser.h"
+#import "FNetmeraEvent.h"
+#import "AppDelegate+NetmeraPlugin.h"
+
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#import <UserNotifications/UserNotifications.h>
 
 
 @implementation NetmeraPlugin
@@ -12,6 +18,8 @@
 NetmeraInbox *netmeraInbox = nil;
 CDVInvokedUrlCommand *inboxCommandId = nil;
 @synthesize notificationCallbackId;
+@synthesize notificationClickCallbackId;
+@synthesize notificationButtonClickCallbackId;
 @synthesize openUrlCallbackId;
 
 static NetmeraPlugin *netmeraPlugin;
@@ -45,21 +53,101 @@ static NetmeraPlugin *netmeraPlugin;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)registerPushNotification:(CDVInvokedUrlCommand*)command
+- (void)subscribePushNotification:(CDVInvokedUrlCommand*)command
 {
+    
+    [self.commandDelegate runInBackground:^{
+        NSData* dataPayload = [AppDelegate getInitialPushPayload];
+            if (dataPayload == nil) {
+                self.notificationCallbackId = command.callbackId;
+                return;
+            }
+            NSString *strISOLatin = [[NSString alloc] initWithData:dataPayload encoding:NSISOLatin1StringEncoding];
+            NSData *dataPayloadUTF8 = [strISOLatin dataUsingEncoding:NSUTF8StringEncoding];
+            NSError* error = nil;
+            NSDictionary *payloadDictionary = [NSJSONSerialization JSONObjectWithData:dataPayloadUTF8 options:0 error:&error];
+            if (error) {
+                NSString* errorMessage = [NSString stringWithFormat:@"%@ => '%@'", [error localizedDescription], strISOLatin];
+                NSLog(@"getInitialPushPayload error: %@", errorMessage);
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:errorMessage];
+                [pluginResult setKeepCallbackAsBool:YES];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                return;
+            }
+            NSLog(@"getInitialPushPayload value: %@", payloadDictionary);
+            NetmeraPushObject *pushObject = [[NetmeraPushObject alloc] initWithDictionary:payloadDictionary];
+            NSDictionary* response = [self mapPushObject:pushObject];
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
     self.notificationCallbackId = command.callbackId;
 }
 
-- (void)registerOpenUrl:(CDVInvokedUrlCommand*)command
+- (void)subscribeOpenUrl:(CDVInvokedUrlCommand*)command
 {
     self.openUrlCallbackId = command.callbackId;
 }
 
+- (void)subscribePushClick:(CDVInvokedUrlCommand*)command {
+    self.notificationClickCallbackId = command.callbackId;
+}
+
+- (void)subscribePushButtonClick:(CDVInvokedUrlCommand*)command {
+    self.notificationButtonClickCallbackId = command.callbackId;
+}
+
 - (void)sendNotification:(NSDictionary *)userInfo {
     if (self.notificationCallbackId != nil) {
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:userInfo];
+        NetmeraPushObject *pushObject = [[NetmeraPushObject alloc] initWithDictionary:userInfo];
+        
+        NSDictionary* response = [self mapPushObject:pushObject];
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.notificationCallbackId];
+    } else {
+        //        if (!self.notificationStack) {
+        //            self.notificationStack = [[NSMutableArray alloc] init];
+        //        }
+        //
+        //        // stack notifications until a callback has been registered
+        //        [self.notificationStack addObject:userInfo];
+        //
+        //        if ([self.notificationStack count] >= kNotificationStackSize) {
+        //            [self.notificationStack removeLastObject];
+        //        }
+    }
+}
+
+- (void)sendNotificationClick:(NSDictionary *)userInfo {
+    if (self.notificationClickCallbackId != nil) {
+        NetmeraPushObject *pushObject = [[NetmeraPushObject alloc] initWithDictionary:userInfo];
+        
+        NSDictionary* response = [self mapPushObject:pushObject];
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.notificationClickCallbackId];
+    } else {
+        //        if (!self.notificationStack) {
+        //            self.notificationStack = [[NSMutableArray alloc] init];
+        //        }
+        //
+        //        // stack notifications until a callback has been registered
+        //        [self.notificationStack addObject:userInfo];
+        //
+        //        if ([self.notificationStack count] >= kNotificationStackSize) {
+        //            [self.notificationStack removeLastObject];
+        //        }
+    }
+}
+
+- (void)sendNotificationButtonClick:(NSDictionary *)userInfo {
+    if (self.notificationButtonClickCallbackId != nil) {
+        NetmeraPushObject *pushObject = [[NetmeraPushObject alloc] initWithDictionary:userInfo];
+        
+        NSDictionary* response = [self mapPushObject:pushObject];
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.notificationButtonClickCallbackId];
     } else {
         //        if (!self.notificationStack) {
         //            self.notificationStack = [[NSMutableArray alloc] init];
@@ -86,23 +174,14 @@ static NetmeraPlugin *netmeraPlugin;
 
 - (void)sendEvent:(CDVInvokedUrlCommand*)command
 {
-    
     CDVPluginResult* pluginResult = nil;
-    NSMutableDictionary *eventDict = [command.arguments objectAtIndex:0];
-    
-    /*
-     NSMutableDictionary* mutableEventDictionary = [command.arguments objectAtIndex:1];
-     NSArray *keysForNullValues = [mutableEventDictionary allKeysForObject:[NSNull null]];
-     [mutableEventDictionary removeObjectsForKeys:keysForNullValues];
-     FNetmeraEvent *event = [FNetmeraEvent event];
-     event.netmeraEventKey = mutableEventDictionary[@"code"];
-     [mutableEventDictionary removeObjectForKey:@"code"];
-     event.eventParameters = mutableEventDictionary;
-     [Netmera sendEvent:event];
-     */
-    
-    
-    NetmeraEvent *event = [[NetmeraEvent alloc] initWithDictionary:eventDict];
+    NSMutableDictionary* mutableEventDictionary = [command.arguments objectAtIndex:0];
+    NSArray *keysForNullValues = [mutableEventDictionary allKeysForObject:[NSNull null]];
+    [mutableEventDictionary removeObjectsForKeys:keysForNullValues];
+    FNetmeraEvent *event = [FNetmeraEvent event];
+    event.netmeraEventKey = mutableEventDictionary[@"code"];
+    [mutableEventDictionary removeObjectForKey:@"code"];
+    event.eventParameters = mutableEventDictionary;
     [Netmera sendEvent:event];
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
@@ -140,25 +219,13 @@ static NetmeraPlugin *netmeraPlugin;
 
 - (NSDictionary*)getInboxList:(NetmeraInbox*)inbox
 {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
+   
     
     NSMutableArray *inboxList = [NSMutableArray array];
     for(NetmeraPushObject *pushObject in inbox.objects)
     {
-        NSDictionary *pluginResponse = @{
-            @"pushId": pushObject.pushId,
-            @"pushInstanceId": pushObject.pushInstanceId,
-            @"badge": [pushObject valueForKey:@"badge"],
-            @"pushType": [pushObject valueForKey:@"pushType"],
-            @"title": [[pushObject valueForKey:@"alert"] valueForKey:@"title"],
-            @"subtitle": [[pushObject valueForKey:@"alert"] valueForKey:@"subtitle"],
-            @"body": [[pushObject valueForKey:@"alert"] valueForKey:@"body"],
-            @"inboxStatus": [pushObject valueForKey:@"inboxStatus"],
-            @"sendDate": [formatter stringFromDate:pushObject.sendDate],
-        };
-        //NSDictionary *dict = pushObject.dictionaryValue;
-        [inboxList addObject:pluginResponse];
+        NSDictionary* dict = [self mapPushObject:pushObject];
+        [inboxList addObject:dict];
     }
     NSDictionary *pluginResponse = @{
         @"hasNextPage": @(inbox.hasNextPage),
@@ -166,6 +233,29 @@ static NetmeraPlugin *netmeraPlugin;
     };
     
     return pluginResponse;
+}
+
+-(NSDictionary*)mapPushObject:(NetmeraPushObject*)pushObject
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
+    NSString *deeplinkUrl = @"";
+    if ([pushObject.action.deeplinkURLString isEqual:[NSNull null]]) {
+        deeplinkUrl = pushObject.action.deeplinkURLString;
+    }
+    NSDictionary *pushDict = @{
+        @"pushId": pushObject.pushId,
+        @"pushInstanceId": pushObject.pushInstanceId,
+        @"pushType": [pushObject valueForKey:@"pushType"],
+        @"title": [[pushObject valueForKey:@"alert"] valueForKey:@"title"],
+        @"subtitle": [[pushObject valueForKey:@"alert"] valueForKey:@"subtitle"],
+        @"body": [[pushObject valueForKey:@"alert"] valueForKey:@"body"],
+        @"inboxStatus": [pushObject valueForKey:@"inboxStatus"],
+        @"sendDate": [formatter stringFromDate:pushObject.sendDate],
+        @"deeplinkUrl":  deeplinkUrl
+    };
+    
+    return pushDict;
 }
 
 - (void)fetchNextPage:(CDVInvokedUrlCommand*)command

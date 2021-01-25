@@ -1,19 +1,19 @@
 var exec = require('cordova/exec');
 
-exports.start = function (arg0) {
-    exec(onSuccess, onFailure, 'NetmeraPlugin', 'start', [arg0]);
+exports.start = function (arg0, arg1) {
+    exec(onSuccess, onFailure, 'NetmeraPlugin', 'start', [arg0, arg1]);
 };
 
 exports.requestPushNotificationAuthorization = function () {
     exec(onSuccess, onFailure, 'NetmeraPlugin', 'requestPushNotificationAuthorization', []);
 };
 
-exports.registerPushNotification = function (success, error) {
-    exec(success, error, 'NetmeraPlugin', 'registerPushNotification', []);
+exports.subscribePushNotification = function (success, error) {
+    exec(success, error, 'NetmeraPlugin', 'subscribePushNotification', []);
 };
 
-exports.registerOpenUrl = function (success, error) {
-    exec(success, error, 'NetmeraPlugin', 'registerOpenUrl', []);
+exports.subscribeOpenUrl = function (success, error) {
+    exec(success, error, 'NetmeraPlugin', 'subscribeOpenUrl', []);
 };
 
 exports.subscribePushClick = function (success, error) {
@@ -45,7 +45,7 @@ exports.updatePushStatus = function (arg0, arg1, arg2, success, error) {
 }
 
 exports.updateAllPushStatus = function(arg0) {
-    exec(onSuccess, onFailure, 'NetmeraPlugin', 'updateAllPushStatus', [arg0]);
+    exec(success, error, 'NetmeraPlugin', 'updateAllPushStatus', [arg0]);
 }
 
 exports.updateUser = function (arg0) {

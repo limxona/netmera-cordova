@@ -5,5 +5,7 @@
 @interface AppDelegate (NetmeraPlugin)
 
 + (NSString*)getAPNSToken;
++ (void)setInitialPushPayload:(NSData*)payload;
++ (NSData*)getInitialPushPayload;
 
 @end

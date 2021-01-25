@@ -42,7 +42,7 @@
         <source-file src="src/android/NetmeraPlugin.java" target-dir="src/com/netmera/cordova/plugin" />
         <source-file src="src/android/PushReceiver.java" target-dir="src/com/netmera/cordova/plugin" />
         <framework src="netmera.gradle" custom="true" type="gradleReference" />
-        <framework src="com.netmera:netmera:3.8.3" />
+        <framework src="com.netmera:netmera:3.8.4" />
         <framework src="com.google.gms:google-services:4.3.4" />
     </platform>
 
@@ -60,5 +60,7 @@
         <source-file src="src/ios/AppDelegate+NetmeraPlugin.m" />
         <header-file src="src/ios/FNetmeraUser.h" />
         <source-file src="src/ios/FNetmeraUser.m" />
+        <header-file src="src/ios/FNetmeraEvent.h" />
+        <source-file src="src/ios/FNetmeraEvent.m" />
     </platform>
 </plugin>
