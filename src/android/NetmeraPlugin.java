@@ -160,16 +160,23 @@ public class NetmeraPlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("start")) {
-            String message = args.getString(0);
+            String netmeraKey = args.getString(0);
+            String fcmKey = args.getString(1);
 
             //this.coolMethod(message, callbackContext);
 
-            //Netmera.init(this, "339386690082", "QBT4dSEEyRKGPVLbZIazzSnz0D1KJZBQDk_SIUSBonc15Aa2t9HUNg");
-            //Netmera.logging(true);
-            //Netmera.enablePopupPresentation();
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    Netmera.init(context, fcmKey, netmeraKey);
+                    Netmera.logging(true);
+                    Netmera.enablePopupPresentation();
+                }
+            });
+
+
 
             return true;
-        } else if (action.equals("registerPushNotification")) {
+        } else if (action.equals("subscribePushNotification")) {
             pushCallbackContext = callbackContext;
             return true;
         } else if (action.equals("subscribePushClick")) {
@@ -180,7 +187,7 @@ public class NetmeraPlugin extends CordovaPlugin {
             return true;
         } else if (action.equals("requestPushNotificationAuthorization")) {
             return true;
-        } else if (action.equals("registerOpenUrl")) {
+        } else if (action.equals("subscribeOpenUrl")) {
             return true;
         } else if (action.equals("sendEvent")) {
             JSONObject event = args.getJSONObject(0);
@@ -232,11 +239,11 @@ public class NetmeraPlugin extends CordovaPlugin {
     }
 
     private void fetchInbox(JSONObject userFilter, CallbackContext callbackContext) throws JSONException {
-
+        ArrayList list = new ArrayList<String>();
         NetmeraInboxFilter filter = new NetmeraInboxFilter.Builder()
                 .pageSize(userFilter.has("pageSize") ? userFilter.getInt("pageSize") : 2147483647)
                 .status(userFilter.has("status") ? userFilter.getInt("status") : 3)
-                .categories(userFilter.has("categories") ? toArrayList(userFilter.getJSONArray("categories")) : null)
+                .categories(userFilter.has("categories") ? toArrayList(userFilter.getJSONArray("categories")) : list)
                 .includeExpiredObjects(userFilter.has("includeExpiredObjects") ? userFilter.getBoolean("includeExpiredObjects") : false)
                 .build();
 

@@ -25,7 +25,7 @@ exports.subscribePushButtonClick = function (success, error) {
 };
 
 exports.sendEvent = function (arg0, arg1) {
-    exec(onSuccess, onFailure, 'NetmeraPlugin', 'subscribePushButtonClick', [arg0, arg1]);
+    exec(onSuccess, onFailure, 'NetmeraPlugin', 'sendEvent', [arg0, arg1]);
 };
 
 exports.fetchInboxUsingFilter = function (arg0, success, error) {
