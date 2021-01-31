@@ -53,7 +53,15 @@
             </feature>
         </config-file>
 
-        <framework src="Netmera" type="podspec" spec="3.9.2" />
+        <!-- <framework src="Netmera" type="podspec" spec="3.9.2" /> -->
+        <podspec>
+            <config>
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Netmera"/>
+            </pods>
+        </podspec>
         <header-file src="src/ios/NetmeraPlugin.h" />
         <source-file src="src/ios/NetmeraPlugin.m" />
         <header-file src="src/ios/AppDelegate+NetmeraPlugin.h" />

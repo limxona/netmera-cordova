@@ -245,8 +245,8 @@ static NetmeraPlugin *netmeraPlugin;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
     NSString *deeplinkUrl = @"";
-    if ([pushObject.action.deeplinkURLString isEqual:[NSNull null]]) {
-        deeplinkUrl = pushObject.action.deeplinkURLString;
+    if ([pushObject.action.deeplinkURL.absoluteString isEqual:[NSNull null]]) {
+        deeplinkUrl = pushObject.action.deeplinkURL.absoluteString;
     }
     NSDictionary *pushDict = @{
         @"pushId": pushObject.pushId,
