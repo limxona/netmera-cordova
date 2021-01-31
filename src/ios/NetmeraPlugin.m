@@ -37,6 +37,11 @@ static NetmeraPlugin *netmeraPlugin;
 {
     CDVPluginResult* pluginResult = nil;
     NSString* key = [command.arguments objectAtIndex:0];
+    NSString* baseUrl = [command.arguments objectAtIndex:2];
+    
+    if (![key isEqual:[NSNull null]]) {
+        [Netmera setBaseURL:baseUrl];
+    }
     
     [Netmera setAPIKey:key];
     [Netmera setLogLevel:(NetmeraLogLevelDebug)];
