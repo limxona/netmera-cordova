@@ -1,7 +1,7 @@
 var exec = require('cordova/exec');
 
-exports.start = function (arg0, arg1) {
-    exec(onSuccess, onFailure, 'NetmeraPlugin', 'start', [arg0, arg1]);
+exports.start = function (arg0, arg1, arg2) {
+    exec(onSuccess, onFailure, 'NetmeraPlugin', 'start', [arg0, arg1, arg2]);
 };
 
 exports.requestPushNotificationAuthorization = function () {
