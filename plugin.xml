@@ -59,7 +59,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Netmera"/>
+                <pod name="Netmera" spec="3.11.2-beta3"/>
             </pods>
         </podspec>
         <header-file src="src/ios/NetmeraPlugin.h" />
