@@ -160,20 +160,20 @@ public class NetmeraPlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("start")) {
-            String netmeraKey = args.getString(0);
-            String fcmKey = args.getString(1);
-            String baseUrl = args.getString(2);
-            cordova.getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    Netmera.init(context, fcmKey, netmeraKey);
-                    Netmera.logging(true);
-                    Netmera.enablePopupPresentation();
-                    if (baseUrl != "null") {
-                        Log.d(TAG, "runs: onpremise setup!");
-                        Netmera.setBaseUrl(baseUrl);
-                    }
-                }
-            });
+            // String netmeraKey = args.getString(0);
+            // String fcmKey = args.getString(1);
+            // String baseUrl = args.getString(2);
+            // cordova.getActivity().runOnUiThread(new Runnable() {
+            //     public void run() {
+            //         Netmera.init(context, fcmKey, netmeraKey);
+            //         Netmera.logging(true);
+            //         Netmera.enablePopupPresentation();
+            //         if (baseUrl != "null") {
+            //             Log.d(TAG, "runs: onpremise setup!");
+            //             Netmera.setBaseUrl(baseUrl);
+            //         }
+            //     }
+            // });
             return true;
         } else if (action.equals("subscribePushNotification")) {
             pushCallbackContext = callbackContext;

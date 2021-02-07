@@ -8,6 +8,10 @@
         <clobbers target="NetmeraPlugin" />
     </js-module>
 
+    <preference name="NETMERA_KEY" />
+    <preference name="FCM_KEY" />
+    <preference name="NETMERA_BASE_URL" default=" "/>
+
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="NetmeraPlugin">
@@ -22,31 +26,51 @@
 
         <config-file target="AndroidManifest.xml" parent="/*/application">
             <receiver android:name="com.netmera.cordova.plugin.PushReceiver" android:exported="false">
-            <intent-filter>
-                <action android:name="com.netmera.web.content.SHOW"/>
-                <action android:name="com.netmera.web.content.CLOSE"/>
-                <action android:name="com.netmera.push.intent.REGISTER"/>
-                <action android:name="com.netmera.push.intent.RECEIVE"/>
-                <action android:name="com.netmera.push.intent.OPEN"/>
-                <action android:name="com.netmera.push.intent.DISMISS"/>
-                <action android:name="com.netmera.push.intent.BUTTON"/>
-                <action android:name="com.netmera.push.intent.carousel.OPEN"/>
-                <action android:name="com.netmera.push.intent.carousel.PREV"/>
-                <action android:name="com.netmera.push.intent.carousel.NEXT"/>
-                <action android:name="com.netmera.push.intent.carousel.ITEM"/>
-            </intent-filter>
-        </receiver>
+                <intent-filter>
+                    <action android:name="com.netmera.web.content.SHOW"/>
+                    <action android:name="com.netmera.web.content.CLOSE"/>
+                    <action android:name="com.netmera.push.intent.REGISTER"/>
+                    <action android:name="com.netmera.push.intent.RECEIVE"/>
+                    <action android:name="com.netmera.push.intent.OPEN"/>
+                    <action android:name="com.netmera.push.intent.DISMISS"/>
+                    <action android:name="com.netmera.push.intent.BUTTON"/>
+                    <action android:name="com.netmera.push.intent.carousel.OPEN"/>
+                    <action android:name="com.netmera.push.intent.carousel.PREV"/>
+                    <action android:name="com.netmera.push.intent.carousel.NEXT"/>
+                    <action android:name="com.netmera.push.intent.carousel.ITEM"/>
+                </intent-filter>
+            </receiver>
         </config-file>
-        
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <meta-data android:name="NETMERA_KEY" android:value="$NETMERA_KEY" />
+            <meta-data android:name="FCM_KEY" android:value="$FCM_KEY" />
+            <meta-data android:name="NETMERA_BASE_URL" android:value="$NETMERA_BASE_URL" />
+        </config-file>
+
         <config-file parent="/*" target="AndroidManifest.xml" />
         <source-file src="src/android/NetmeraPlugin.java" target-dir="src/com/netmera/cordova/plugin" />
         <source-file src="src/android/PushReceiver.java" target-dir="src/com/netmera/cordova/plugin" />
+        <source-file src="src/android/NetmeraApplication.java" target-dir="src/com/netmera/cordova/plugin" />
         <framework src="netmera.gradle" custom="true" type="gradleReference" />
         <framework src="com.netmera:netmera:3.8.5-beta6" />
         <framework src="com.google.gms:google-services:4.3.4" />
+
+        <hook type="after_plugin_add" src="afterPluginAdd.js" />
     </platform>
 
     <platform name="ios">
+        <config-file target="*-Info.plist" parent="NetmeraKey">
+            <string>$NETMERA_KEY</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="FCMKey">
+            <string>$FCM_KEY</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NetmeraBaseUrl">
+            <string>$NETMERA_BASE_URL</string>
+        </config-file>
         <config-file parent="/*" target="config.xml">
             <feature name="NetmeraPlugin">
                 <param name="ios-package" value="NetmeraPlugin" />
