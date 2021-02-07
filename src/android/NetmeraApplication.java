@@ -20,7 +20,7 @@ public class NetmeraApplication extends Application {
             String netmeraFCM = bundle.getString("FCM_KEY");
             String netmeraBaseUrl = bundle.getString("NETMERA_BASE_URL");
 
-            Netmera.init(this, netmeraFCM, netmeraKey);
+            Netmera.init(this, netmeraFCM.trim().substring(1), netmeraKey.trim());
             if(!netmeraBaseUrl.trim().isEmpty()) {
                 Netmera.setBaseUrl(netmeraBaseUrl);
             }
