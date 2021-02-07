@@ -36,8 +36,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.gms:google-services:4.3.4'
-    implementation 'com.netmera:netmera:3.8.5-beta7' {
-        exclude module: 'com.scottyab' name: 'rootbeer-lib'
+    implementation ("com.netmera:netmera:3.8.5-beta7") {
+        exclude module: "com.scottyab"
     }
 
 }

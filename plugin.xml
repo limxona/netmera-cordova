@@ -53,7 +53,7 @@
         <source-file src="src/android/PushReceiver.java" target-dir="src/com/netmera/cordova/plugin" />
         <source-file src="src/android/NetmeraApplication.java" target-dir="src/com/netmera/cordova/plugin" />
         <framework src="netmera.gradle" custom="true" type="gradleReference" />
-        <framework src="com.netmera:netmera:3.8.5-beta6" />
+        <!-- <framework src="com.netmera:netmera:3.8.5-beta7" /> -->
         <framework src="com.google.gms:google-services:4.3.4" />
 
         <hook type="after_plugin_add" src="afterPluginAdd.js" />
