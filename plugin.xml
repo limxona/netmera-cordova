@@ -44,7 +44,7 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <meta-data android:name="NETMERA_KEY" android:value="$NETMERA_KEY" />
-            <meta-data android:name="FCM_KEY" android:value="$FCM_KEY" />
+            <meta-data android:name="FCM_KEY" android:value=" $FCM_KEY" />
             <meta-data android:name="NETMERA_BASE_URL" android:value="$NETMERA_BASE_URL" />
         </config-file>
 
