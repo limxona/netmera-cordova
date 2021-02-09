@@ -242,25 +242,23 @@ static NetmeraPlugin *netmeraPlugin;
 
 -(NSDictionary*)mapPushObject:(NetmeraPushObject*)pushObject
 {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
-    NSString *deeplinkUrl = @"";
-    if ([pushObject.action.deeplinkURL.absoluteString isEqual:[NSNull null]]) {
-        deeplinkUrl = pushObject.action.deeplinkURL.absoluteString;
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    data[@"pushId"] = [pushObject pushId];
+    data[@"pushInstanceId"] = [pushObject pushInstanceId];
+    data[@"pushType"] = [NSNumber numberWithInteger:[pushObject pushType]];
+    data[@"title"] = [[pushObject alert] title];
+    data[@"subtitle"] = [[pushObject alert] subtitle];
+    data[@"body"] = [[pushObject alert] body];
+    data[@"inboxStatus"] = [NSNumber numberWithInteger:[pushObject inboxStatus]];
+    if(pushObject.sendDate){
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        data[@"sendDate"] = [dateFormatter stringFromDate:pushObject.sendDate];
     }
-    NSDictionary *pushDict = @{
-        @"pushId": pushObject.pushId,
-        @"pushInstanceId": pushObject.pushInstanceId,
-        @"pushType": [pushObject valueForKey:@"pushType"],
-        @"title": [[pushObject valueForKey:@"alert"] valueForKey:@"title"],
-        @"subtitle": [[pushObject valueForKey:@"alert"] valueForKey:@"subtitle"],
-        @"body": [[pushObject valueForKey:@"alert"] valueForKey:@"body"],
-        @"inboxStatus": [pushObject valueForKey:@"inboxStatus"],
-        @"sendDate": [formatter stringFromDate:pushObject.sendDate],
-        @"deeplinkUrl":  deeplinkUrl
-    };
+    data[@"deeplinkUrl"] = [pushObject action].deeplinkURLString;
+
     
-    return pushDict;
+    return data;
 }
 
 - (void)fetchNextPage:(CDVInvokedUrlCommand*)command
