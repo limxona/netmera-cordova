@@ -32,7 +32,7 @@ exports.fetchInboxUsingFilter = function (arg0, success, error) {
     exec(success, error, 'NetmeraPlugin', 'fetchInboxUsingFilter', [arg0]);
 };
 
-exports.fetchNextPage = function () {
+exports.fetchNextPage = function (success, error) {
     exec(success, error, 'NetmeraPlugin', 'fetchNextPage', []);
 }
 
