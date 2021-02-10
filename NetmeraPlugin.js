@@ -34,19 +34,19 @@ exports.fetchInboxUsingFilter = function (arg0, success, error) {
 
 exports.fetchNextPage = function (success, error) {
     exec(success, error, 'NetmeraPlugin', 'fetchNextPage', []);
-}
+};
 
 exports.countForStatus = function (arg0, success, error) {
     exec(success, error, 'NetmeraPlugin', 'countForStatus', [arg0]);
-}
+};
 
 exports.updatePushStatus = function (arg0, arg1, arg2, success, error) {
     exec(success, error, 'NetmeraPlugin', 'updatePushStatus', [arg0, arg1, arg2]);
-}
+};
 
 exports.updateAllPushStatus = function(arg0) {
     exec(success, error, 'NetmeraPlugin', 'updateAllPushStatus', [arg0]);
-}
+};
 
 exports.updateUser = function (arg0) {
     exec(onSuccess, onFailure,'NetmeraPlugin', 'updateUser', [arg0]);
