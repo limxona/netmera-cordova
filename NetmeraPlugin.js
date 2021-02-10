@@ -53,7 +53,7 @@ exports.updateUser = function (arg0) {
 };
 
 exports.requestLocationAuthorization = function() {
-    exec(onSuccess, onFailure, 'NetmeraPlugin', 'requestLocationAuthorization');
+    exec(onSuccess, onFailure, 'NetmeraPlugin', 'requestLocationAuthorization', []);
 };
 
 var onSuccess = function (result) {

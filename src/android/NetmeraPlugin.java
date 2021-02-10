@@ -213,6 +213,9 @@ public class NetmeraPlugin extends CordovaPlugin {
             JSONObject user = args.getJSONObject(0);
             this.updateUser(user, callbackContext);
             return true;
+        } else if (action.equals("requestLocationAuthorization")) {
+            this.requestPermissionsForLocation(callbackContext);
+            return true;
         }
         return false;
     }
@@ -299,6 +302,11 @@ public class NetmeraPlugin extends CordovaPlugin {
         int count = 0;
         count = netmeraInbox.countForStatus(status);
         callbackContext.success(count);
+    }
+
+    private void requestPermissionsForLocation(CallbackContext callbackContext) {
+        Netmera.requestPermissionsForLocation();
+        callbackContext.success();
     }
 
     private JSONObject getInboxResponse(NetmeraInbox inbox) {
