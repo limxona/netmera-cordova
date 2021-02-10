@@ -76,6 +76,18 @@
                 <param name="ios-package" value="NetmeraPlugin" />
             </feature>
         </config-file>
+        
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>remote-notification</string>
+            </array>
+        </config-file>
+        <config-file target="*-Debug.plist" parent="aps-environment">
+            <string>development</string>
+        </config-file>
+        <config-file target="*-Release.plist" parent="aps-environment">
+            <string>production</string>
+        </config-file>
 
         <!-- <framework src="Netmera" type="podspec" spec="3.9.2" /> -->
         <podspec>

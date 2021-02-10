@@ -52,6 +52,10 @@ exports.updateUser = function (arg0) {
     exec(onSuccess, onFailure,'NetmeraPlugin', 'updateUser', [arg0]);
 };
 
+exports.requestLocationAuthorization = function() {
+    exec(onSuccess, onFailure, 'NetmeraPlugin', 'requestLocationAuthorization');
+};
+
 var onSuccess = function (result) {
     console.log("OnSuccess: ", result);
 }

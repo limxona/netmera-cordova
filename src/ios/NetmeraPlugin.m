@@ -331,4 +331,11 @@ static NetmeraPlugin *netmeraPlugin;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)requestLocationAuthorization:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = nil;
+    [Netmera requestLocationAuthorization];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 @end

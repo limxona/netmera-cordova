@@ -26,4 +26,5 @@
 - (void)countForStatus:(CDVInvokedUrlCommand*)command;
 - (void)updatePushStatus:(CDVInvokedUrlCommand*)command;
 - (void)updateUser:(CDVInvokedUrlCommand*)command;
+- (void)requestLocationAuthorization:(CDVInvokedUrlCommand*)command;
 @end
