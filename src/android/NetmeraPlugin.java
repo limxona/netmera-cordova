@@ -348,7 +348,7 @@ public class NetmeraPlugin extends CordovaPlugin {
         responsePush.put("pushType", push.getPushType());
         responsePush.put("inboxStatus", push.getInboxStatus());
         responsePush.put("sendDate", push.getSendDate());
-        responsePush.put("deeplinkUrl", push.getDeepLink().toString());
+        responsePush.put("deeplinkUrl", push.getDeepLink() == null ? "" : push.getDeepLink().toString());
 
         return responsePush;
     }
