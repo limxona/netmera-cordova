@@ -39,7 +39,7 @@ static NetmeraPlugin *netmeraPlugin;
     NSString* key = [command.arguments objectAtIndex:0];
     NSString* baseUrl = [command.arguments objectAtIndex:2];
     
-    if (![key isEqual:[NSNull null]]) {
+    if (![baseUrl isEqual:[NSNull null]]) {
         [Netmera setBaseURL:baseUrl];
     }
     
