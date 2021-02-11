@@ -60,11 +60,19 @@ static NetmeraPlugin *netmeraPlugin;
 
 - (void)subscribePushNotification:(CDVInvokedUrlCommand*)command
 {
-    
+    self.notificationCallbackId = command.callbackId;
+}
+
+- (void)subscribeOpenUrl:(CDVInvokedUrlCommand*)command
+{
+    self.openUrlCallbackId = command.callbackId;
+}
+
+- (void)subscribePushClick:(CDVInvokedUrlCommand*)command {
     [self.commandDelegate runInBackground:^{
         NSData* dataPayload = [AppDelegate getInitialPushPayload];
             if (dataPayload == nil) {
-                self.notificationCallbackId = command.callbackId;
+                self.notificationClickCallbackId = command.callbackId;
                 return;
             }
             NSString *strISOLatin = [[NSString alloc] initWithData:dataPayload encoding:NSISOLatin1StringEncoding];
@@ -85,15 +93,6 @@ static NetmeraPlugin *netmeraPlugin;
             CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
-    self.notificationCallbackId = command.callbackId;
-}
-
-- (void)subscribeOpenUrl:(CDVInvokedUrlCommand*)command
-{
-    self.openUrlCallbackId = command.callbackId;
-}
-
-- (void)subscribePushClick:(CDVInvokedUrlCommand*)command {
     self.notificationClickCallbackId = command.callbackId;
 }
 
