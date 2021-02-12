@@ -91,6 +91,7 @@ static NetmeraPlugin *netmeraPlugin;
             NetmeraPushObject *pushObject = [[NetmeraPushObject alloc] initWithDictionary:payloadDictionary];
             NSDictionary* response = [self mapPushObject:pushObject];
             CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:response];
+            [pluginResult setKeepCallbackAsBool:YES];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     self.notificationClickCallbackId = command.callbackId;
