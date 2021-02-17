@@ -8,9 +8,17 @@
         <clobbers target="NetmeraPlugin" />
     </js-module>
 
-    <preference name="NETMERA_KEY" />
+<!--     <preference name="NETMERA_KEY" />
     <preference name="FCM_KEY" />
-    <preference name="NETMERA_BASE_URL" default=" "/>
+    <preference name="NETMERA_BASE_URL" default=" "/> -->
+
+    <hook type="after_prepare" src="src/ios/hooks/NotificationExtension/addNotificationServiceExtension.js" />
+    <hook type="after_plugin_add" src="src/ios/hooks/NotificationExtension/addNotificationServiceExtension.js" />
+    <hook type="before_plugin_rm" src="src/ios/hooks/NotificationExtension/removeNotificationServiceExtension.js" />
+
+    <hook type="after_prepare" src="src/ios/hooks/NotificationContentExtension/addNotificationContentExtension.js" />
+    <hook type="after_plugin_add" src="src/ios/hooks/NotificationContentExtension/addNotificationContentExtension.js" />
+    <hook type="before_plugin_rm" src="src/ios/hooks/NotificationContentExtension/removeNotificationContentExtension.js" />
 
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
@@ -44,12 +52,12 @@
             </receiver>
         </config-file>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+<!--         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <meta-data android:name="NETMERA_KEY" android:value="$NETMERA_KEY" />
             <meta-data android:name="FCM_KEY" android:value="X$FCM_KEY" />
             <meta-data android:name="NETMERA_BASE_URL" android:value="$NETMERA_BASE_URL" />
         </config-file>
-
+ -->
         <config-file parent="/*" target="AndroidManifest.xml" />
         <source-file src="src/android/NetmeraPlugin.java" target-dir="src/com/netmera/cordova/plugin" />
         <source-file src="src/android/PushReceiver.java" target-dir="src/com/netmera/cordova/plugin" />
@@ -62,7 +70,7 @@
     </platform>
 
     <platform name="ios">
-        <config-file target="*-Info.plist" parent="NetmeraKey">
+<!--         <config-file target="*-Info.plist" parent="NetmeraKey">
             <string>$NETMERA_KEY</string>
         </config-file>
 
@@ -72,13 +80,13 @@
 
         <config-file target="*-Info.plist" parent="NetmeraBaseUrl">
             <string>$NETMERA_BASE_URL</string>
-        </config-file>
+        </config-file> -->
         <config-file parent="/*" target="config.xml">
             <feature name="NetmeraPlugin">
                 <param name="ios-package" value="NetmeraPlugin" />
             </feature>
         </config-file>
-        
+
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
                 <string>remote-notification</string>

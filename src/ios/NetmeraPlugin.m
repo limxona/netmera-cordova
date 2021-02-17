@@ -36,15 +36,26 @@ static NetmeraPlugin *netmeraPlugin;
 - (void)start:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult = nil;
-    NSString* key = [command.arguments objectAtIndex:0];
-    NSString* baseUrl = [command.arguments objectAtIndex:2];
+    //NSString* key = [command.arguments objectAtIndex:0];
+    //NSString* baseUrl = [command.arguments objectAtIndex:2];
     
-    if (![baseUrl isEqual:[NSNull null]]) {
+    NSString *key = [self.commandDelegate.settings objectForKey:[@"NetmeraKey" lowercaseString]];
+    NSString *baseUrl = [self.commandDelegate.settings objectForKey:[@"NetmeraBaseUrl" lowercaseString]];
+    NSString *appGroupName = [self.commandDelegate.settings objectForKey:[@"AppGroupName" lowercaseString]];
+    
+    
+    if (baseUrl != nil) {
         [Netmera setBaseURL:baseUrl];
     }
     
-    [Netmera setAPIKey:key];
-    [Netmera setLogLevel:(NetmeraLogLevelDebug)];
+    if (key != nil) {
+        [Netmera setAPIKey:key];
+        [Netmera setLogLevel:(NetmeraLogLevelDebug)];
+    }
+    
+    if (appGroupName != nil) {
+        [Netmera setAppGroupName:appGroupName];
+    }
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
