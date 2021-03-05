@@ -62,22 +62,6 @@
     </platform>
 
     <platform name="ios">
-        <config-file target="*-Info.plist" parent="NetmeraKey">
-            <string>$NETMERA_KEY</string>
-        </config-file>
-
-        <config-file target="*-Info.plist" parent="FCMKey">
-            <string>$FCM_KEY</string>
-        </config-file>
-
-        <config-file target="*-Info.plist" parent="NetmeraBaseUrl">
-            <string>$NETMERA_BASE_URL</string>
-        </config-file>
-        <config-file parent="/*" target="config.xml">
-            <feature name="NetmeraPlugin">
-                <param name="ios-package" value="NetmeraPlugin" />
-            </feature>
-        </config-file>
         
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
